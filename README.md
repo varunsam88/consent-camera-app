@@ -10,7 +10,8 @@ Quick start
 
 Notes
 - The app explicitly requests camera permission and only captures/uploads when the user taps the button.
-- This scaffold is intentionally minimal — production apps should add error handling, TLS validation, authentication, and user-facing consent UX before uploading.
+- After taking a picture a confirmation dialog appears displaying the image; the file is only uploaded if the user taps **Upload**.
+- This scaffold is intentionally minimal — production apps should add error handling, TLS validation, authentication, and expanded consent UX before uploading.
 
 Build on GitHub (optional)
 

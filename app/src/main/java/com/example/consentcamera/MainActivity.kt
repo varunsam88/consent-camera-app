@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
 
-        captureButton.setOnClickListener { takePhotoAndUpload() }
+captureButton.setOnClickListener { takePhotoAndCapture() }
     }
 
     private fun startCamera() {
@@ -65,15 +65,15 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun takePhotoAndUpload() {
+    private fun takePhotoAndCapture() {
         val imageCapture = imageCapture ?: return
         val photoFile = File(cacheDir, "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis())}.jpg")
 
         val outputOptions = OutputFileOptions.Builder(photoFile).build()
         imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                // Upload in background
-                CoroutineScope(Dispatchers.IO).launch { uploadFile(photoFile) }
+                // show preview and ask for consent
+                showPreview(photoFile)
             }
 
             override fun onError(exception: ImageCaptureException) {
@@ -96,5 +96,25 @@ class MainActivity : AppCompatActivity() {
         client.newCall(request).execute().use { response ->
             // You can inspect response.isSuccessful and act accordingly
         }
+    }
+
+    private fun showPreview(photoFile: File) {
+        val bitmap = android.graphics.BitmapFactory.decodeFile(photoFile.absolutePath)
+        val imageView = android.widget.ImageView(this).apply {
+            setImageBitmap(bitmap)
+            adjustViewBounds = true
+            setPadding(16, 16, 16, 16)
+        }
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Upload photo?")
+            .setView(imageView)
+            .setPositiveButton("Upload") { _, _ ->
+                CoroutineScope(Dispatchers.IO).launch { uploadFile(photoFile) }
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }
