@@ -25,13 +25,10 @@ jobs:
           java-version: '11'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 34
-          components: |
-            platform-tools
-            platforms;android-34
-            build-tools;34.0.2
+        uses: android-actions/setup-android@v3
+      - name: Install Android packages
+        run: |
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.2"
 
       - name: Run Gradle assembleDebug
         uses: gradle/gradle-build-action@v2
