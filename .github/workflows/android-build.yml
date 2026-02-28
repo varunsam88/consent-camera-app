@@ -35,6 +35,7 @@ jobs:
       - name: Run Gradle assembleDebug
         uses: gradle/gradle-build-action@v2
         with:
+          gradle-version: '7.4.2'
           arguments: assembleDebug
 
       - name: Upload APK artifact
