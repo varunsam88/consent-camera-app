@@ -24,3 +24,26 @@ If you don't want to build locally you can push the `consent-camera-app` reposit
 Notes:
 - The CI build still requires proper Android SDK setup in the workflow (provided). After pushing, allow a first run and download the artifact from the Actions UI.
 - If you want a signed release APK, I can add signing instructions or a secure GitHub Actions secrets flow.
+
+Local test server (optional)
+
+A very basic Node.js/Express server is included under `server/` for testing uploads.
+
+1. Install dependencies:
+
+```bash
+cd server
+npm install
+```
+
+2. Start the server:
+
+```bash
+npm start
+```
+
+   The server listens on port 3000 by default and saves uploaded files to `server/uploads`.
+
+3. Update `MainActivity.kt` earlier `url` variable to `http://<your-machine-ip>:3000/upload` so a device on the same network can send photos.
+
+4. Use the app to capture and upload; responses from the server will be visible in the terminal.
